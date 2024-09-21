@@ -4,43 +4,51 @@ import static com.raylib.Raylib.*;
 
 public class Main {
   public static void main(String[] args) {
-    //Declaration
+    // DECLARATION
     int windowWidth = 1200;
     int windowHeight = 800;
 
-    int ballX = windowWidth / 2;
-    int ballY = windowHeight / 2;
+    int centerX = windowWidth / 2;
+    int centerY = windowHeight / 2;
 
-    int ballSpeed = 5;
+    Vector2 screenCenter = new Vector2();
+
+    screenCenter.x((float) windowWidth / 2);
+    screenCenter.y((float) windowHeight / 2);
+
+    Vector2 initialVelocity = new Vector2();
+    float ballAcc = 1;
+
+    Vector2 ballPosition = new Vector2();
+
+    ballPosition.x(centerX);
+    ballPosition.y(centerY);
+
+    initialVelocity.x(0);
+    initialVelocity.y(0);
+
+    String pos;
+
     Color bgColor = BLACK;
+
+    Entity ball = new Entity(ballPosition, initialVelocity, ballAcc, screenCenter);
 
     InitWindow(windowWidth, windowHeight, "Boop");
 
     while (!WindowShouldClose()) {
-      //Event handling
-      switch (GetKeyPressed()) {
-        case KEY_LEFT:
-          ballX -= ballSpeed;
-          break;
-        case KEY_RIGHT:
-          ballX += ballSpeed;
-          break;
-        case KEY_UP:
-          ballY -= ballSpeed;
-          break;
-        case KEY_DOWN:
-          ballY += ballSpeed;
-          break;
-        default:
-          break;
-      }
+      // EVENT HANDLING
+      float deltaTime = GetFrameTime();
+
+      ball.positionUpdate(deltaTime);
+      pos = String.format("X: %.4f\n\nY: %.4f", ball.getX(), ball.getY());
+
       BeginDrawing();
       ClearBackground(bgColor);
-      // Drawing
-      DrawCircle(ballX, ballY, 30, WHITE);
+      // DRAWING
+      DrawText(pos, 0, 0, 24, WHITE);
+      DrawCircleV(ball.getPos(), 30, WHITE);
       EndDrawing();
     }
     CloseWindow();
   }
 }
-
